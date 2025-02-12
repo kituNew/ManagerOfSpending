@@ -20,4 +20,16 @@ class ExperenseTrackerViewModel: ObservableObject {
             return Transaction(amount: Double.random(in: 1000...100000), category: randomCategory, date: randomeDay, notes: randomNotes)
         }
     }
+    
+    var mothlyExpenses: [(category: String, total: Double)] {
+        let groupedTransactions = Dictionary(grouping: transactions) { $0.category }
+        
+        return groupedTransactions.compactMap { groupedItem in
+            let category = groupedItem.key
+            let totalAmount = groupedItem.value.reduce(0) { result, transaction in
+                result + transaction.amount
+            }
+            return (category: category, total: totalAmount)
+        }
+    }
 }

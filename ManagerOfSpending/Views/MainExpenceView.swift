@@ -13,23 +13,27 @@ struct MainExpenceView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(spacing: 16) {
-                    ForEach(getSortedTransactions()) { transaction in
-                        NavigationLink {
-                            TransactionDetailView()
-                        } label: {
-                            TransactionRow(transaction: transaction)
-                        }
-                        .swipeActions(edge: .trailing) {
-                            Button(role: .destructive) {
-                                deleteTransaction(transaction)
+                VStack(spacing: 8) {
+                    ExpensesChartView(mothlyExpenses: viewModel.mothlyExpenses)
+                        .frame(height: 250)
+                        .padding()
+                        .background(.background)
+                        .cornerRadius(16)
+                        .shadow(radius: 8)
+                    
+                    VStack(spacing: 16) {
+                        ForEach(getSortedTransactions()) { transaction in
+                            NavigationLink {
+                                TransactionDetailView()
                             } label: {
-                                Label("Удалить", systemImage: "trash")
+                                TransactionRow(transaction: transaction)
                             }
                         }
                     }
                 }
+                .padding()
             }
+            .navigationTitle("Мои расходы")
         }
     }
     
