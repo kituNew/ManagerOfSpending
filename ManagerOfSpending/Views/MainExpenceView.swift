@@ -24,7 +24,7 @@ struct MainExpenceView: View {
                     VStack(spacing: 16) {
                         ForEach(getSortedTransactions()) { transaction in
                             NavigationLink {
-                                TransactionDetailView()
+                                TransactionDetailView(transaction: transaction)
                             } label: {
                                 TransactionRow(transaction: transaction)
                             }
