@@ -9,6 +9,9 @@ import SwiftUI
 
 struct MainExpenceView: View {
     @StateObject var viewModel = ExperenseTrackerViewModel()
+    @State private var isShowingAddNewRow = false
+    
+    @State private var isPressed = false
     
     var body: some View {
         NavigationStack {
@@ -28,12 +31,34 @@ struct MainExpenceView: View {
                             } label: {
                                 TransactionRow(transaction: transaction)
                             }
+                            .simultaneousGesture(
+                                LongPressGesture(minimumDuration: 1.0)
+                                    .onChanged { _ in
+                                        isPressed = true
+                                    }
+                                    .onEnded { _ in
+                                        isPressed = false
+                                        deleteTransaction(transaction)
+                                    }
+                            )
                         }
                     }
                 }
                 .padding()
             }
             .navigationTitle("Мои расходы")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        isShowingAddNewRow.toggle()
+                    }) {
+                        Image(systemName: "plus")
+                    }
+                }
+            }
+            .sheet(isPresented: $isShowingAddNewRow) {
+                AddNewRow(transactions: $viewModel.transactions, isShowingSheet: $isShowingAddNewRow)
+            }
         }
     }
     
