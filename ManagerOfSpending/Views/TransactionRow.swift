@@ -26,9 +26,5 @@ struct TransactionRow: View {
             Text(transaction.amount.formatted(.currency(code: "RUB")))
                 .fontWeight(.semibold)
         }
-        .padding()
-        .background(.regularMaterial)
-        .cornerRadius(16)
-        .padding(.horizontal, 8)
     }
 }

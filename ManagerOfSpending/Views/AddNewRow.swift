@@ -12,36 +12,41 @@ struct AddNewRow: View {
     @Binding var isShowingSheet: Bool
     
     @State private var amount: String = ""
-    @State private var category: String = ""
+    @State private var category: String = "Не указано"
     @State private var note: String = ""
+    
+    var categories: [String] = ["Не указано", "Еда", "Транспорт", "Отдых", "Жильё", "Прочее"]
 
     var body: some View {
-        VStack {
-            Text("Создать новую трату")
-                .padding()
-                .frame(maxWidth: .infinity, alignment: .top)
-                .font(.system(size: 32, weight: .bold))
-            
-            TextField("Сумма", text: $amount)
-                .padding()
-                .font(.system(size: 25, weight: .medium))
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-            
-            TextField("Категория", text: $category)
-                .padding()
-                .font(.system(size: 25, weight: .medium))
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-            
-            TextField("Заметка", text: $note)
-                .padding()
-                .font(.system(size: 25, weight: .medium))
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-            
-            Button("Создать") {
-                addNewTransaction()
-                isShowingSheet.toggle()
+        NavigationStack {
+            List {
+                TextField("Сумма", text: $amount)
+                    .font(.system(size: 16, weight: .medium))
+                    .textFieldStyle(.plain)
+                
+                Picker("Категория", selection: $category) {
+                    ForEach(categories, id: \.self) {
+                        Text($0)
+                    }
+                }
+                
+                TextField("Заметка", text: $note)
+                    .font(.system(size: 16, weight: .medium))
+                    .textFieldStyle(.plain)
             }
-            .font(.system(size: 25, weight: .semibold))
+            .listStyle(.automatic)
+            .navigationTitle("Новый расход")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        addNewTransaction()
+                        isShowingSheet.toggle()
+                    }) {
+                        Text("Создать")
+                    }
+                }
+            }
+            .scrollDisabled(true)
         }
     }
     

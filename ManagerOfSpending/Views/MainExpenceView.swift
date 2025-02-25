@@ -12,40 +12,48 @@ struct MainExpenceView: View {
     @State private var isShowingAddNewRow = false
     
     @State private var isPressed = false
+    @State private var thisTransaction: Transaction?
+    @State private var showAlert: Bool = false
+
     
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(spacing: 8) {
+            List {
+                Section {
                     ExpensesChartView(mothlyExpenses: viewModel.mothlyExpenses)
                         .frame(height: 250)
                         .padding()
-                        .background(.background)
                         .cornerRadius(16)
                         .shadow(radius: 8)
-                    
-                    VStack(spacing: 16) {
-                        ForEach(getSortedTransactions()) { transaction in
-                            NavigationLink {
-                                TransactionDetailView(transaction: transaction)
-                            } label: {
-                                TransactionRow(transaction: transaction)
-                            }
-                            .simultaneousGesture(
-                                LongPressGesture(minimumDuration: 1.0)
-                                    .onChanged { _ in
-                                        isPressed = true
-                                    }
-                                    .onEnded { _ in
-                                        isPressed = false
-                                        deleteTransaction(transaction)
-                                    }
-                            )
+                }
+                
+                ForEach(getSortedTransactions()) { transaction in
+                    Section {
+                        NavigationLink {
+                            TransactionDetailView(transaction: transaction)
+                        } label: {
+                            TransactionRow(transaction: transaction)
+                        }
+                    }
+                    .swipeActions(edge: .trailing) {
+                        Button(role: .destructive) {
+                            deleteTransaction(transaction)
+                        } label: {
+                            Label("Delete", systemImage: "trash")
                         }
                     }
                 }
-                .padding()
+                    /*
+                     .alert(isPresented: $isPressed) {
+                     Alert(title: Text("Удалить"), message: Text("Вы действительно хотите удалить транзакцию?"), primaryButton: .destructive(Text("Да")) {
+                     isPressed = false
+                     guard let this = self.thisTransaction else { return }
+                     deleteTransaction(this)
+                     }, secondaryButton: .cancel())
+                     }
+                     */
             }
+            .background(.white)
             .navigationTitle("Мои расходы")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
