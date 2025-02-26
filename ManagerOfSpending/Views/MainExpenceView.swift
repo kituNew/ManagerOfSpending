@@ -11,16 +11,15 @@ struct MainExpenceView: View {
     @StateObject var viewModel = ExperenseTrackerViewModel()
     @State private var isShowingAddNewRow = false
     
-    @State private var isPressed = false
-    @State private var thisTransaction: Transaction?
-    @State private var showAlert: Bool = false
+    //@State private var isPressed = false
+    //@State private var thisTransaction: Transaction?
 
     
     var body: some View {
         NavigationStack {
             List {
                 Section {
-                    ExpensesChartView(mothlyExpenses: viewModel.mothlyExpenses)
+                    ExpensesChartView(mothlyExpenses: viewModel.mothlyExpenses, categorys: viewModel.catigorys)
                         .frame(height: 250)
                         .padding()
                         .cornerRadius(16)
@@ -43,15 +42,16 @@ struct MainExpenceView: View {
                         }
                     }
                 }
-                    /*
-                     .alert(isPresented: $isPressed) {
+                /*
+                .alert(isPresented: $isPressed) {
                      Alert(title: Text("Удалить"), message: Text("Вы действительно хотите удалить транзакцию?"), primaryButton: .destructive(Text("Да")) {
-                     isPressed = false
-                     guard let this = self.thisTransaction else { return }
-                     deleteTransaction(this)
+                         guard let this = self.thisTransaction else { return }
+                         deleteTransaction(this)
+                         thisTransaction = nil
+                         isPressed = false
                      }, secondaryButton: .cancel())
-                     }
-                     */
+                 }
+                 */
             }
             .background(.white)
             .navigationTitle("Мои расходы")
@@ -65,7 +65,7 @@ struct MainExpenceView: View {
                 }
             }
             .sheet(isPresented: $isShowingAddNewRow) {
-                AddNewRow(transactions: $viewModel.transactions, isShowingSheet: $isShowingAddNewRow)
+                AddNewRow(viewModel: viewModel, isShowingSheet: $isShowingAddNewRow)
             }
         }
     }

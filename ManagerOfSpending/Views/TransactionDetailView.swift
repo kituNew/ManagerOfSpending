@@ -24,7 +24,7 @@ struct TransactionDetailView: View {
             
             Divider()
             
-            DetailRow(icon: "Категория", value: transaction.category)
+            DetailRow(icon: "Категория", value: transaction.category.name)
             DetailRow(icon: "Дата", value: transaction.date.formatted())
             DetailRow(icon: "Заметки", value: transaction.notes)
             

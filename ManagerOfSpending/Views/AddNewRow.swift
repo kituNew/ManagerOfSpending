@@ -8,15 +8,15 @@
 import SwiftUI
 
 struct AddNewRow: View {
-    @Binding var transactions: [Transaction]
+    @StateObject var viewModel: ExperenseTrackerViewModel
     @Binding var isShowingSheet: Bool
     
     @State private var amount: String = ""
-    @State private var category: String = "Не указано"
+    @State private var category: String = ""
     @State private var note: String = ""
     
-    var categories: [String] = ["Не указано", "Еда", "Транспорт", "Отдых", "Жильё", "Прочее"]
-
+    @State private var categoriesString: [String] = []
+    
     var body: some View {
         NavigationStack {
             List {
@@ -25,7 +25,7 @@ struct AddNewRow: View {
                     .textFieldStyle(.plain)
                 
                 Picker("Категория", selection: $category) {
-                    ForEach(categories, id: \.self) {
+                    ForEach(categoriesString, id: \.self) {
                         Text($0)
                     }
                 }
@@ -48,9 +48,14 @@ struct AddNewRow: View {
             }
             .scrollDisabled(true)
         }
+        .onAppear {
+            categoriesString = viewModel.catigorys.map {$0.name}
+            category = categoriesString.first ?? ""
+        }
     }
     
     private func addNewTransaction() {
-        transactions.append(Transaction(amount: Double(amount) ?? 0, category: category, date: Date(), notes: note))
+        let myCategory = viewModel.catigorys.first(where: {$0.name == category}) ?? Category(name: category, color: .accentColor)
+        viewModel.transactions.append(Transaction(amount: Double(amount) ?? 0, category: myCategory, date: Date(), notes: note))
     }
 }
