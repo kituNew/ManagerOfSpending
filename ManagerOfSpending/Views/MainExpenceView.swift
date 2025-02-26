@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MainExpenceView: View {
-    @StateObject var viewModel = ExperenseTrackerViewModel()
+    @StateObject var viewModel: ExperenseTrackerViewModel
     @State private var isShowingAddNewRow = false
     
     //@State private var isPressed = false
@@ -19,7 +19,7 @@ struct MainExpenceView: View {
         NavigationStack {
             List {
                 Section {
-                    ExpensesChartView(mothlyExpenses: viewModel.mothlyExpenses, categorys: viewModel.catigorys)
+                    ExpensesChartView(mothlyExpenses: viewModel.mothlyExpenses, viewModel: viewModel)
                         .frame(height: 250)
                         .padding()
                         .cornerRadius(16)

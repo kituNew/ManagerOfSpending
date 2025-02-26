@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-struct Category: Equatable, Identifiable, Hashable {
-    let id = UUID()
+struct Category: Equatable, Identifiable, Hashable, Codable {
+    var id = UUID()
     let name: String
-    let color: Color
+    let color: String
 }

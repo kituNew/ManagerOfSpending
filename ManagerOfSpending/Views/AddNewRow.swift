@@ -55,7 +55,7 @@ struct AddNewRow: View {
     }
     
     private func addNewTransaction() {
-        let myCategory = viewModel.catigorys.first(where: {$0.name == category}) ?? Category(name: category, color: .accentColor)
+        let myCategory = viewModel.catigorys.first(where: {$0.name == category}) ?? Category(name: category, color: "gray")
         viewModel.transactions.append(Transaction(amount: Double(amount) ?? 0, category: myCategory, date: Date(), notes: note))
     }
 }

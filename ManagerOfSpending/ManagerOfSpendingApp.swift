@@ -6,12 +6,21 @@
 //
 
 import SwiftUI
+import Combine
 
 @main
 struct ManagerOfSpendingApp: App {
+    @Environment(\.scenePhase) private var scenePhase
+    @StateObject var viewModel = ExperenseTrackerViewModel()
+    
     var body: some Scene {
         WindowGroup {
-            MainExpenceView()
+            MainExpenceView(viewModel: viewModel)
+                .onChange(of: scenePhase) { _, phase in
+                    if phase == .background {
+                        UserDefaults.standard.save(value: viewModel.transactions, forKey: "transactions")
+                    }
+                }
         }
     }
 }
