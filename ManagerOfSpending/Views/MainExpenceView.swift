@@ -8,32 +8,65 @@
 import SwiftUI
 
 struct MainExpenceView: View {
-    @StateObject var viewModel = ExperenseTrackerViewModel()
+    @StateObject var viewModel: ExperenseTrackerViewModel
+    @State private var isShowingAddNewRow = false
+    
+    //@State private var isPressed = false
+    //@State private var thisTransaction: Transaction?
+
     
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(spacing: 8) {
-                    ExpensesChartView(mothlyExpenses: viewModel.mothlyExpenses)
+            List {
+                Section {
+                    ExpensesChartView(mothlyExpenses: viewModel.mothlyExpenses, viewModel: viewModel)
                         .frame(height: 250)
                         .padding()
-                        .background(.background)
                         .cornerRadius(16)
                         .shadow(radius: 8)
-                    
-                    VStack(spacing: 16) {
-                        ForEach(getSortedTransactions()) { transaction in
-                            NavigationLink {
-                                TransactionDetailView(transaction: transaction)
-                            } label: {
-                                TransactionRow(transaction: transaction)
-                            }
+                }
+                
+                ForEach(getSortedTransactions()) { transaction in
+                    Section {
+                        NavigationLink {
+                            TransactionDetailView(transaction: transaction)
+                        } label: {
+                            TransactionRow(transaction: transaction)
+                        }
+                    }
+                    .swipeActions(edge: .trailing) {
+                        Button(role: .destructive) {
+                            deleteTransaction(transaction)
+                        } label: {
+                            Label("Delete", systemImage: "trash")
                         }
                     }
                 }
-                .padding()
+                /*
+                .alert(isPresented: $isPressed) {
+                     Alert(title: Text("Удалить"), message: Text("Вы действительно хотите удалить транзакцию?"), primaryButton: .destructive(Text("Да")) {
+                         guard let this = self.thisTransaction else { return }
+                         deleteTransaction(this)
+                         thisTransaction = nil
+                         isPressed = false
+                     }, secondaryButton: .cancel())
+                 }
+                 */
             }
+            .background(.white)
             .navigationTitle("Мои расходы")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        isShowingAddNewRow.toggle()
+                    }) {
+                        Image(systemName: "plus")
+                    }
+                }
+            }
+            .sheet(isPresented: $isShowingAddNewRow) {
+                AddNewRow(viewModel: viewModel, isShowingSheet: $isShowingAddNewRow)
+            }
         }
     }
     

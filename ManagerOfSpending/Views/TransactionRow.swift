@@ -13,7 +13,7 @@ struct TransactionRow: View {
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
             VStack(alignment: .leading) {
-                Text(transaction.category)
+                Text(transaction.category.name)
                     .font(.headline)
                 Text(transaction.notes)
                     .font(.subheadline)
@@ -26,9 +26,5 @@ struct TransactionRow: View {
             Text(transaction.amount.formatted(.currency(code: "RUB")))
                 .fontWeight(.semibold)
         }
-        .padding()
-        .background(.regularMaterial)
-        .cornerRadius(16)
-        .padding(.horizontal, 8)
     }
 }

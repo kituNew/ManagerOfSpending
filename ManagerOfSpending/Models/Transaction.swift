@@ -7,10 +7,10 @@
 
 import Foundation
 
-struct Transaction: Equatable, Identifiable {
-    let id = UUID()
+struct Transaction: Equatable, Identifiable, Codable {
+    var id = UUID()
     let amount: Double
-    let category: String
+    let category: Category
     let date: Date
     let notes: String
 }
